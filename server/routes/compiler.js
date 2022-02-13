@@ -7,8 +7,8 @@ router.use(express.json())
 router
 .post('/', (req, res) => {
     console.log(req.body.data);
-    const input = "3 4";
-    const output = `7`;
+    const input = "3";
+    const output = "6";
     const eoptokens = output.match(/\S+/g)
     axios
     .post('http://coliru.stacked-crooked.com/compile', {
@@ -17,6 +17,7 @@ router
     })
     .then((result) => {
         let aoutput = '';
+        console.log(result.data.toString());
         if(typeof(result.data) !== 'string'){
             aoutput = result.data.toString();
         }else{
@@ -24,7 +25,7 @@ router
         }
         const aoptokens = aoutput.match(/\S+/g)
         if(eoptokens.length !== aoptokens.length){
-            res.json(0);
+            res.json({verdict: 0, result: result.data});
         }else{
             var correct = 1;
             for(var i=0; i<eoptokens.length; ++i){
@@ -33,8 +34,8 @@ router
                     break;
                 }
             }
-            if(correct) res.json(1);
-            else res.json(0);
+            if(correct) res.json({verdict: 1, result: result.data});
+            else res.json({verdict: 0, result: result.data});
         }
     })
 })

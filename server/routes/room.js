@@ -1,70 +1,70 @@
 const express = require('express')
 const router = express.Router()
-const User = require('../models/user')
+const Room = require('../models/room')
 
 router.use(express.json())
 
 router
 .get('/', (req, res) => {
-    User.find({}, (err, user) => {
+    Room.find({}, (err, room) => {
         catchError(err, res)
-        res.status(200).json(user)
+        res.status(200).json(room)
     })
 })
 .get('/:id', (req, res) => {
-    User.findOne({id: req.params.id}, (err, user) => {
+    Room.findOne({id: req.params.id}, (err, room) => {
         catchError(err, res)
-        res.status(200).json(user)
+        res.status(200).json(room)
     })
 })
 .post('/', (req, res) => {
-    User.findOne({googleId: req.body.googleId}, (err, user) => {
+    Room.findOne({id: req.body.id}, (err, room) => {
         catchError(err, res)
-        if(user){
-            res.status(200).json(user)
+        if(room){
+            res.status(200).json(null)
             return;
         }
-        const newUser = new User(req.body)
-        newUser.save((err, user) => {
+        const newRoom = new Room(req.body)
+        newRoom.save((err, room) => {
             catchError(err, res)
-            res.status(200).json(newUser)
+            res.status(200).json(newRoom)
         })
     })
 })
 .put('/:id', (req, res) => {
-    User.findOne({id: req.params.id}, (err, user) => {
+    Room.findOne({id: req.params.id}, (err, room) => {
         catchError(err, res)
-        if(!user){
+        if(!room){
             res.status(200).json(null)
             return;
         }
-        user.replaceOne(req.body, (err, result) => {
+        room.replaceOne(req.body, (err, result) => {
             catchError(err, res)
             res.status(200).json(result)
         })
      })
 })
 .patch('/:id', (req, res) => {
-    User.findOne({id: req.params.id}, (err, user) => {
+    Room.findOne({id: req.params.id}, (err, room) => {
         catchError(err, res)
-        if(!user){
+        if(!room){
             res.status(200).json(null)
             return;
         }
-        user.updateOne(req.body, (err, result) => {
+        room.updateOne(req.body, (err, result) => {
             catchError(err, res)
             res.status(200).json(result)
         })
      })
 })
 .delete('/:id', (req, res) => {
-    User.deleteOne({id: req.params.id}, (err, result) => {
+    Room.deleteOne({id: req.params.id}, (err, result) => {
         catchError(err, res)
         res.status(200).json(result)
     })
 })
 .delete('/', (req, res) => {
-    User.deleteMany({}, (err, result) => {
+    Room.deleteMany({}, (err, result) => {
         catchError(err, res)
         res.status(200).json(result)
     })

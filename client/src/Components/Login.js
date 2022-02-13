@@ -1,50 +1,44 @@
 import axios from "axios"
 import { useContext, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { AuthContext } from "../Context/AuthContext"
+import GoogleLogin from "react-google-login"
 const cookie = require('react-cookies')
 
 export default function Login(){
+    const navigate = useNavigate()
     const [data, setData] = useState({
         id: '',
         password: ''
     })
     const {user, setUser} = useContext(AuthContext)
-    const handleChange = (event) => {
-        setData({
-            ...data,
-            [event.target.name]: event.target.value
-        })
-    }
-    const handleSubmit = (event) => {
-        event.preventDefault()
+    const responseGoogle = (res) => {
         axios
-        .get(`/user/${data.id}`)
+        .post('/user', {
+            googleId: res.googleId,
+            name: res.Du.tf,
+            firstName: res.Du.VX,
+            email: res.Du.tv 
+        })  
         .then((res) => {
-            if(res.data == null || res.data.password !== data.password){
-                console.log('User not found');
-                return;
-            }
-            setUser(data.id)
-            cookie.save('userId', data.id)
-        })        
+            setUser(res.data)
+            cookie.save('userId', res.data.googleId)
+            navigate('/dashboard');
+        })    
     }
 
     return(
         <div>
-            Login
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <input onChange={handleChange} type="email" value={data.email} name="id" placeholder="Email"></input>
-                </div>
-                <div>
-                    <input onChange={handleChange} type="password" value={data.password} name="password" placeholder="Password"></input>
-                </div>
-                <div>
-                    <input type="submit" value="Submit"></input>
-                </div>
-            </form>
-            <Link to='/signup'>Sign Up</Link>
+            <p>Login</p>
+            <div>
+                <GoogleLogin
+                    clientId={process.env.REACT_APP_CLIENT_ID}
+                    buttonText="Login"
+                    onSuccess={responseGoogle}
+                    onFailure={responseGoogle}
+                    cookiePolicy={'single_host_origin'}
+                />
+            </div>
         </div>
     )
 }

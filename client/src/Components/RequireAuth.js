@@ -5,7 +5,7 @@ import { AuthContext } from "../Context/AuthContext"
 export default function RequireAuth(props){
     const {user, setUser} = useContext(AuthContext)
     return(
-        true 
+        user 
         ?
         props.children
         :

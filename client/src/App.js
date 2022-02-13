@@ -3,17 +3,22 @@ import { AuthContext } from "./Context/AuthContext";
 import { useEffect, useState } from "react";
 import cookie from 'react-cookies'
 import { routes } from "./routes";
+import axios from "axios";
+import RequireAuth from "./Components/RequireAuth";
+import Home from "./Components/Home";
 
 function App() {
-
-  console.log(routes);
 
   const [user, setUser] = useState(null)
 
   useEffect(() => {
     const userId = cookie.load('userId')
     if(userId){
-      setUser(userId)
+      axios
+      .get(`/user/${userId}`)
+      .then((res) => {
+        setUser(res.data);
+      })
     }
   }, [])
 
@@ -22,11 +27,13 @@ function App() {
       <AuthContext.Provider value={{user, setUser}}>
         <BrowserRouter>
           <Routes>
+            <Route path='/' key='/' element={<RequireAuth><Home /></RequireAuth>}>
             {
               routes.map((route) => (
-                <Route path={route.path} element={route.element} />
+                <Route key={route.path} path={route.path} element={route.element} />
               ))
             }
+            </Route>
           </Routes>
         </BrowserRouter>
       </AuthContext.Provider>

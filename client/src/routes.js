@@ -1,19 +1,33 @@
 import RequireAuth from "./Components/RequireAuth"
 import Home from "./Components/Home"
-import Signup from "./Components/Signup"
 import Prompt from "./Components/Prompt"
+import {NewProblem, Problem, ProblemList} from "./Components/Problem"
+import {NewRoom} from "./Components/Room"
+import Dashboard from "./Components/Dashboard"
 
 export const routes = [
     {
-        path: '/',
-        element: <RequireAuth><Home /></RequireAuth>
-    },
-    {
-        path: '/signup',
-        element: <Signup />
-    },
-    {
         path: '/prompt',
         element: <Prompt />
+    },
+    {
+        path: '/dashboard',
+        element: <Dashboard />
+    },
+    {
+        path: '/problem/new',
+        element: <NewProblem />
+    },
+    {
+        path: '/room/new',
+        element: <NewRoom />
+    },
+    {
+        path: '/problem',
+        element: <ProblemList />
+    },
+    {
+        path: '/problem/:id',
+        element: <Problem />
     }
 ]

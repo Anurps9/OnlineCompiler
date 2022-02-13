@@ -18,10 +18,10 @@ export default function Prompt(){
         })
         .then((res) => {
             console.log(res);
-            if(res.data == 1){
+            if(res.data.verdict == 1){
                 setStatus('OK');
             }else{
-                setStatus('WA');
+                setStatus('NOT OK');
             }
         })
     }   
